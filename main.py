@@ -15,7 +15,7 @@ import os
 
 # FLASK APP
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -30,7 +30,7 @@ def load_user(user_id):
 
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///blog.db')
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -262,12 +262,11 @@ def about():
 @app.route("/contact", methods=['GET', 'POST'])
 @login_required
 def contact():
-    # THIS DOESNT WORK BECAUSE I DONT WANT MY EMAIL GETTING HACKED
     if request.method == 'POST':
         connection = SMTP("smtp.gmail.com")
         connection.starttls()
-        connection.login(user="dsasda", password="sada")
-        connection.sendmail(from_addr="email", to_addrs="email", msg=f"By:{request.form.get('name')}  {request.form.get('email')}\n{request.form.get('message')}")
+        connection.login(user=os.environ.get('CONTACT_EMAIL'), password=os.environ.get('CONTACT_PASS'))
+        connection.sendmail(from_addr=os.environ.get('CONTACT_EMAIL'), to_addrs=os.environ.get('MY_EMAIL'), msg=f"By:{request.form.get('name')}  {request.form.get('email')}\n{request.form.get('message')}")
         connection.close()
         return redirect(url_for('get_all_posts'))
     return render_template("contact.html")
