@@ -262,6 +262,7 @@ def about():
 @app.route("/contact", methods=['GET', 'POST'])
 @login_required
 def contact():
+    # Doesn't work yet because no email
     if request.method == 'POST':
         connection = SMTP("smtp.gmail.com")
         connection.starttls()
