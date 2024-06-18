@@ -15,7 +15,7 @@ import os
 
 # FLASK APP
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
+app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -27,14 +27,10 @@ login_manager.init_app(app)
 def load_user(user_id):
   return User.query.get(user_id)
 
-
-
 # CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', 'sqlite:///blog.db')
 db = SQLAlchemy()
 db.init_app(app)
-
-
 
 # DATABASE
 class User(db.Model, UserMixin):
@@ -77,7 +73,6 @@ class BlogPost(db.Model):
 
 with app.app_context():
     db.create_all()
-
 
 
 # WRAPPER ADMIN ONLY
